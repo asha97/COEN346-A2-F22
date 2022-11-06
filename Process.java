@@ -12,12 +12,35 @@ public class Process {
 
 
     //constructor
-    public Process(int bt, int at, int pID, String u , String s) {
+    public Process(int bt, int at, int pID, String u , String s)
+    {
         burstTime = bt;
         arrivalTime = at;
         processID = pID;
         user = u;
         state = s;
+    }
+
+
+    public void run()
+    {
+       //indicate the process has started
+        System.out.println("Process " + user + "," + processID + " started");
+
+        //the process is going to be running..
+        //must make a loop to allow the process to run as long as its burst time is not over
+
+
+        for (int i = burstTime; i >= 0 ; i--)
+        {
+            thread.sleep(200);
+            burstTime --;
+            System.out.println("Process " + user + "," + processID +" paused");
+        }
+
+        System.out.println("Process " + user + "," + processID +" resumed");
+
+
     }
 
 }

@@ -27,7 +27,7 @@ public class FileInput {
         timeQuantum = Integer.parseInt(reader.readLine());
 
         /* we want to count the number of users and store their processes in separate arrays/arraylist */
-
+        System.out.println ("read.");
         //increment the counter when character detected, will use to split time quantum
         int countUsers;
         //read of character
