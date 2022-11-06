@@ -12,13 +12,12 @@ public class Process {
 
 
     //constructor
-    public Process(int bt, int at, int pID, String u , String s)
+    public Process(int pID, String u , int at, int bt)
     {
         burstTime = bt;
         arrivalTime = at;
         processID = pID;
         user = u;
-        state = s;
     }
 
 
