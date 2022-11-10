@@ -1,7 +1,9 @@
 //this is the class that is going to be storing all of the informations about the process
 
 
+
 public class Process implements Runnable{
+
 
     //information of the processes (going to be extracted from the input.txt file later)
     int allocatedTime; //Allocated time
@@ -9,7 +11,6 @@ public class Process implements Runnable{
     int arrivalTime; //arrival time
     int processID; //id of the process
     String state; //started or resumed or finished or paused
-
 
     //constructor
     public Process(int pID, User u , int at, int st, int alt)
@@ -20,7 +21,6 @@ public class Process implements Runnable{
         processID = pID;
         state = "idle";
     }
-
 
     public void run()
     {
@@ -38,9 +38,11 @@ public class Process implements Runnable{
             allocatedTime -= 1;
         }
 
+
         if(serviceTime==0){
             state = "ended";
             System.out.println("Process "+processID+" has "+state+".");
+
         }
         else{
             state = "paused";
