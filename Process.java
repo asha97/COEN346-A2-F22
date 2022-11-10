@@ -1,45 +1,92 @@
 //this is the class that is going to be storing all of the informations about the process
 
 
-public class Process {
+public class Process implements Runnable{
 
     //information of the processes (going to be extracted from the input.txt file later)
-    int burstTime; //burst time
+    int allocatedTime; //Allocated time
+    int serviceTime; //burst time
     int arrivalTime; //arrival time
     int processID; //id of the process
-    String user; //if user A or B
     String state; //started or resumed or finished or paused
 
 
     //constructor
-    public Process(int pID, String u , int at, int bt)
+    public Process(int pID, User u , int at, int st, int alt)
     {
-        burstTime = bt;
+        allocatedTime = alt;
+        serviceTime = st;
         arrivalTime = at;
         processID = pID;
-        user = u;
+        state = "idle";
     }
 
 
     public void run()
     {
-       //indicate the process has started
-        System.out.println("Process " + user + "," + processID + " started");
-
-        //the process is going to be running..
-        //must make a loop to allow the process to run as long as its burst time is not over
-
-
-        for (int i = burstTime; i >= 0 ; i--)
-        {
-            thread.sleep(200);
-            burstTime --;
-            System.out.println("Process " + user + "," + processID +" paused");
+        if(state == "idle"){
+            state = "started";
+        }
+        else if(state == "paused") {
+            state = "resumed";
         }
 
-        System.out.println("Process " + user + "," + processID +" resumed");
+        System.out.println("Process "+processID+" has "+state+".");
 
+        while(serviceTime>0 && allocatedTime>0){
+            serviceTime -= 1;
+            allocatedTime -= 1;
+        }
 
+        if(serviceTime==0){
+            state = "ended";
+            System.out.println("Process "+processID+" has "+state+".");
+        }
+        else{
+            state = "paused";
+            System.out.println("Process "+processID+" has "+state+".");
+        }
     }
 
+
+    public void setAllocatedTime(int time){
+        this.allocatedTime = time;
+    }
+
+    public int getAllocatedTime() {
+        return allocatedTime;
+    }
+
+    public int getServiceTime() {
+        return serviceTime;
+    }
+
+    public void setServiceTime(int serviceTime) {
+        this.serviceTime = serviceTime;
+    }
+
+    public int getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(int arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    public int getProcessID() {
+        return processID;
+    }
+
+    public void setProcessID(int processID) {
+        this.processID = processID;
+    }
+
+
+    public String getstate() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 }

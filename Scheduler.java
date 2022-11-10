@@ -5,17 +5,13 @@
 //make a list/array that is going to be representing the ready queue that could be scheduled
 import java.util.ArrayList;
 import java.lang.Runnable;
+import java.util.LinkedList;
+import java.util.Queue;
 
-
-
-public class Scheduler extends Runnable{
+public class Scheduler implements Runnable{
 
     //list of all the users
-    public ArrayList<String> users;
-    //list of all the processes
-    public ArrayList<Process> processes;
-    //list of the ready queue
-    public ArrayList<Process> processQueue;
+    public ArrayList<User> users;
     //time quantum
     public int timeQuantum;
     //get current time
@@ -23,32 +19,43 @@ public class Scheduler extends Runnable{
 
     public Scheduler(int q)
     {
-        users = new ArrayList<String>();
-        processes = new ArrayList<Process>();
-        processQueue = new ArrayList<Process>();
+        users = new ArrayList<User>();
+        processList = new ArrayList<Process>();
         timeQuantum = q;
         currTime = 1; //start of the time
     }
 
-    public void addProcess(int pid, String user1, int arrTime, int burst)
-    {
-        //adding the process into an object of type process
-        Process process1 = new Process(pid, user1, arrTime, burst);
+    private void allocateTime(){
+        //Check which user have at least one process ready to run
+        int size = 0;
+        for(int user=0;user<users.size();user++){
+            if(users.get(user).isEmpty()){
+                continue;
+            }
+            else{
+                size += 1;
+            }
+        }
 
-        //adding the object into the list of processes
-        processes.add(process1);
-
-    }
-
-    public void readyQueue()
-    {
-
+        int time = timeQuantum/size;
+        for(int i =0;i<users.size();i++){
+            User current = users.get(i);
+            current.setAllocatedTime(time);
+            current.allocateTimeToProcesses();
+            users.set(i, current);
+            processList.addAll(current.getUser_processes());
+        }
     }
 
     public void run()
     {
 
+
+
+
     }
+
+
 
 
 }
