@@ -20,42 +20,75 @@ public class Scheduler implements Runnable{
     public Scheduler(int q)
     {
         users = new ArrayList<User>();
-        processList = new ArrayList<Process>();
         timeQuantum = q;
-        currTime = 1; //start of the time
+        currTime = 1; //start time
     }
 
     private void allocateTime(){
         //Check which user have at least one process ready to run
-        int size = 0;
+        int readyUsers = 0;
         for(int user=0;user<users.size();user++){
-            if(users.get(user).isEmpty()){
-                continue;
-            }
-            else{
-                size += 1;
+            if(users.get(user).isReady(currTime)){
+                readyUsers += 1;
             }
         }
 
-        int time = timeQuantum/size;
+        int time = timeQuantum/readyUsers;
         for(int i =0;i<users.size();i++){
             User current = users.get(i);
             current.setAllocatedTime(time);
             current.allocateTimeToProcesses();
             users.set(i, current);
-            processList.addAll(current.getUser_processes());
         }
     }
 
-    public void run()
-    {
-
-
-
-
+    public void run() {
+        while (isNotDone()) {
+            //Allocates the allowed running time to all process that are ready
+            this.allocateTime();
+            for (int user = 0; user < users.size(); user++) {
+                for (int process = 0; process < users.get(user).getUser_processes().size(); process++) {
+                    //Runs the process if it is ready
+                    if (users.get(user).getUser_processes().get(process).serviceTime <= currTime) {
+                        Process runningProcess = users.get(user).getUser_processes().get(process);
+                        runningProcess.setCurrentTime(currTime);
+                        //Process runs for amount of allocated time or until
+                        Thread t = new Thread(runningProcess);
+                        t.start();
+                        try {
+                            t.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //Updates the current time inside the scheduler
+                        currTime = runningProcess.getCurrentTime();
+                        //Updates the user with the running process or removes it if it has ended
+                        if (runningProcess.getstate() == "ended") {
+                            User current_user = users.get(user);
+                            current_user.user_processes.remove(runningProcess);
+                            users.set(user,current_user);
+                        }
+                        else{
+                            User current_user = users.get(user);
+                            current_user.user_processes.set(process,runningProcess);
+                            users.set(user,current_user);
+                        }
+                    }
+                }
+            }
+        }
     }
 
+    public boolean isNotDone(){
+        for(int user=0;user<users.size();user++){
+            if(!users.get(user).isEmpty()){
+                return true;
+            }
+        }
+        return false;
+    }
 
-
-
+    public void addUser(User u){
+        users.add(u);
+    }
 }

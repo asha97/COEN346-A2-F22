@@ -3,11 +3,13 @@ import java.util.ArrayList;
 public class User {
     private String name;
     private int allocatedTime;
-    private ArrayList<Process> user_processes;
+    public ArrayList<Process> user_processes;
+    private int number_of_ready_processes;
 
     User(String name){
         this.name = name;
         this.allocatedTime = 0;
+        this.number_of_ready_processes = 0;
     }
 
     public String getName() {
@@ -27,7 +29,7 @@ public class User {
     }
 
     public void allocateTimeToProcesses(){
-        int time = allocatedTime/ user_processes.size();
+        int time = allocatedTime/ number_of_ready_processes;
         for(int i =0;i<user_processes.size();i++){
             Process current = user_processes.get(i);
             current.setAllocatedTime(time);
@@ -47,14 +49,19 @@ public class User {
         this.user_processes = user_processes;
     }
 
-    public boolean isEmpty(){
-        if(user_processes.isEmpty()){
-            return true;
+    public boolean isReady(int index){
+        this.number_of_ready_processes = 0;
+        boolean hasReadyProcesses = false;
+        for(int i =0;i<user_processes.size();i++){
+            if(user_processes.get(i).arrivalTime<=index){
+                hasReadyProcesses = true;
+                this.number_of_ready_processes += 1;
+            }
         }
-        else{
-            return false;
-        }
+        return hasReadyProcesses;
     }
 
-
+    public boolean isEmpty(){
+        return user_processes.isEmpty();
+    }
 }

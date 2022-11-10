@@ -8,16 +8,20 @@ public class Process implements Runnable{
     int serviceTime; //burst time
     int arrivalTime; //arrival time
     int processID; //id of the process
+    int currentTime; //Current time when running thread
+    String user_name; //Name of user that possess the process
     String state; //started or resumed or finished or paused
 
 
     //constructor
-    public Process(int pID, User u , int at, int st, int alt)
+    public Process(int pID, String u, int at, int st)
     {
-        allocatedTime = alt;
+        currentTime = 0;
+        allocatedTime = 0;
         serviceTime = st;
         arrivalTime = at;
         processID = pID;
+        user_name = u;
         state = "idle";
     }
 
@@ -31,20 +35,21 @@ public class Process implements Runnable{
             state = "resumed";
         }
 
-        System.out.println("Process "+processID+" has "+state+".");
+        System.out.println("Time "+currentTime+", User "+user_name+", Process "+processID+" has "+state);
 
         while(serviceTime>0 && allocatedTime>0){
+            currentTime += 1;
             serviceTime -= 1;
             allocatedTime -= 1;
         }
 
         if(serviceTime==0){
             state = "ended";
-            System.out.println("Process "+processID+" has "+state+".");
+            System.out.println("Time "+currentTime+", User "+user_name+", Process "+processID+" has "+state);
         }
         else{
             state = "paused";
-            System.out.println("Process "+processID+" has "+state+".");
+            System.out.println("Time "+currentTime+", User "+user_name+", Process "+processID+" has "+state);
         }
     }
 
@@ -81,6 +86,13 @@ public class Process implements Runnable{
         this.processID = processID;
     }
 
+    public int getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(int currentTime) {
+        this.currentTime = currentTime;
+    }
 
     public String getstate() {
         return state;
@@ -88,5 +100,26 @@ public class Process implements Runnable{
 
     public void setState(String state) {
         this.state = state;
+    }
+
+
+    //Overriding equals method for easy removing of processes inside user class
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        final Process other = (Process) obj;
+
+        if (this.processID != other.processID) {
+            return false;
+        }
+
+        return true;
     }
 }
