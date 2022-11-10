@@ -10,6 +10,10 @@ public class User {
         this.allocatedTime = 0;
     }
 
+    public User() {
+
+    }
+
     public String getName() {
         return name;
     }

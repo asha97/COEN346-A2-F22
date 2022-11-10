@@ -40,11 +40,16 @@ public class FileInput {
                 String[] splittingRead = line.split(" ");
 
                 //First element: User
-                String user = splittingRead[0];
-                scheduler.users.add(user);
+                String userString = splittingRead[0];
+
+                //create an object of type User
+                User user = new User(userString);
 
                 //next element: number of processes of the particular user.
                 int numberOfProcesses = Integer.parseInt(splittingRead[1]);
+
+                //create an object of type Process
+                Process process1;
 
                 //we are going to be reading the processes of the user here
                 for (int i = 0; i < numberOfProcesses ; i++)
@@ -53,8 +58,14 @@ public class FileInput {
                     int arrivalT = reader.read();
                     int burstT = reader.read();
                     //adding the process into an arraylist
-                    scheduler.addProcess(i, user, arrivalT, burstT);
+                    process1 = new Process(i, user, arrivalT, burstT);
+
+                    //adding process into user
+                    user.addProcess(process1);
                 }
+
+                //add user into the arraylist in the scheduler after populating the user with the processes
+                scheduler.users.add(user);
             }
             //Reader is closed
             reader.close();

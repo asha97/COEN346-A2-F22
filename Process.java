@@ -22,6 +22,15 @@ public class Process implements Runnable{
         state = "idle";
     }
 
+    //constructor for FileInput.java since we are not going to be using allocated time just yet
+    public Process(int pID, User u , int at, int st)
+    {
+        serviceTime = st;
+        arrivalTime = at;
+        processID = pID;
+        state = "idle";
+    }
+
     public void run()
     {
         if(state == "idle"){

@@ -17,6 +17,9 @@ public class Scheduler implements Runnable{
     //get current time
     public int currTime;
 
+    //process list
+    public ArrayList<Process> processList;
+
     public Scheduler(int q)
     {
         users = new ArrayList<User>();
