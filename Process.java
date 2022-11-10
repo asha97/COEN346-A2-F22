@@ -8,6 +8,7 @@ public class Process implements Runnable{
     int serviceTime; //burst time
     int arrivalTime; //arrival time
     int processID; //id of the process
+    int currentTime;
     String state; //started or resumed or finished or paused
 
 
@@ -18,6 +19,7 @@ public class Process implements Runnable{
         serviceTime = st;
         arrivalTime = at;
         processID = pID;
+        currentTime = 0;
         state = "idle";
     }
 
@@ -34,6 +36,7 @@ public class Process implements Runnable{
         System.out.println("Process "+processID+" has "+state+".");
 
         while(serviceTime>0 && allocatedTime>0){
+            currentTime +=1;
             serviceTime -= 1;
             allocatedTime -= 1;
         }
@@ -61,6 +64,14 @@ public class Process implements Runnable{
         return serviceTime;
     }
 
+    public int getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(int currentTime) {
+        this.currentTime = currentTime;
+    }
+
     public void setServiceTime(int serviceTime) {
         this.serviceTime = serviceTime;
     }
@@ -68,6 +79,7 @@ public class Process implements Runnable{
     public int getArrivalTime() {
         return arrivalTime;
     }
+
 
     public void setArrivalTime(int arrivalTime) {
         this.arrivalTime = arrivalTime;

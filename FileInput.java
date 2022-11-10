@@ -40,8 +40,8 @@ public class FileInput {
                 String[] splittingRead = line.split(" ");
 
                 //First element: User
-                String user = splittingRead[0];
-                scheduler.users.add(user);
+                User user = splittingRead[0];
+                scheduler.addUser(user);
 
                 //next element: number of processes of the particular user.
                 int numberOfProcesses = Integer.parseInt(splittingRead[1]);
