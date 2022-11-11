@@ -11,27 +11,28 @@ public class FileInput {
 
 
     String input_path; //Path to the input file
+    ArrayList<User> users;
+    int timeQuantum;
 
     //Constructor
     public FileInput(String path){
+        users = new ArrayList<User>();
+        timeQuantum = 0;
         input_path = path;
     }
 
     //Method that takes the text input file path as an argument and return the content into an ArrayList of integers.
-    public int[] inputArrayRead(){
+    public void inputArrayRead(){
 
         //An ArrayList is created instead of an array since we don't know the size of th input file.
         ArrayList<Integer> list = new ArrayList<Integer>();
         try {
             //Reader is opened
             String filepath = new File("").getAbsolutePath();
-            BufferedReader reader = new BufferedReader(new FileReader(filepath+input_path));
+            BufferedReader reader = new BufferedReader(new FileReader(input_path));
 
             //Read the time quantum on the first line of the input file
-            int timeQuantum = Integer.parseInt(reader.readLine());
-
-            //Creating object scheduler
-            Scheduler scheduler = new Scheduler(timeQuantum);
+            timeQuantum = Integer.parseInt(reader.readLine());
 
             String line = reader.readLine();
             while (line != null) {
@@ -40,8 +41,7 @@ public class FileInput {
                 String[] splittingRead = line.split(" ");
 
                 //First element: User
-                User user = splittingRead[0];
-                scheduler.addUser(user);
+                User user = new User(splittingRead[0]);
 
                 //next element: number of processes of the particular user.
                 int numberOfProcesses = Integer.parseInt(splittingRead[1]);
@@ -50,11 +50,16 @@ public class FileInput {
                 for (int i = 0; i < numberOfProcesses ; i++)
                 {
                     //reading the line of the process with burst time and arrival time
-                    int arrivalT = reader.read();
-                    int burstT = reader.read();
+                    line = reader.readLine();
+                    splittingRead = line.split(" ");
+                    int arrivalT = Integer.parseInt(splittingRead[0]);
+                    int burstT = Integer.parseInt(splittingRead[1]);
                     //adding the process into an arraylist
-                    scheduler.addProcess(i, user, arrivalT, burstT);
+                    Process p = new Process(i, user.getName(), arrivalT, burstT);
+                    user.addProcess(p);
                 }
+                users.add(user);
+                line = reader.readLine();
             }
             //Reader is closed
             reader.close();
@@ -63,16 +68,13 @@ public class FileInput {
         catch(IOException e){
             e.printStackTrace();
         }
-        //ArrayList is converted to an int[] array and returned by the method.
-        int[] array = new int[list.size()];
-
-        for(int i=0;i<list.size();i++){
-            array[i] = list.get(i).intValue();
-            System.out.println(array[i]);
-        }
-
-        return array;
     }
 
-}
+    public ArrayList<User> getUsers() {
+        return users;
+    }
 
+    public int getTimeQuantum() {
+        return timeQuantum;
+    }
+}

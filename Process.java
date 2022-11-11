@@ -133,4 +133,5 @@ public class Process implements Runnable{
     public void setState(String state) {
         this.state = state;
     }
+
 }

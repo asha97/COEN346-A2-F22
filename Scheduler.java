@@ -20,9 +20,9 @@ public class Scheduler implements Runnable{
     //Writer
     BufferedWriter outputWriter;
 
-    public Scheduler(int q,BufferedWriter writer)
+    public Scheduler(ArrayList<User> inputArray, int q,BufferedWriter writer)
     {
-        users = new ArrayList<User>();
+        users = inputArray;
         timeQuantum = q;
         currTime = 1; //start time
         outputWriter = writer;
