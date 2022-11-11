@@ -13,23 +13,25 @@ public class main {
         FileOutputStream fos = new FileOutputStream(fout);
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
 
-        //Input file is red
+        //Input file is read.
         FileInput input = new FileInput(filepath+"/input.txt");
         input.inputArrayRead();
 
-
+        //Scheduler is initialized from the array generated from the input file.
         Scheduler scheduler = new Scheduler(input.getUsers(),input.getTimeQuantum(),writer);
 
+        //Scheduler Thread is started.
         Thread t = new Thread(scheduler);
         t.start();
 
+        //Thread is joined. An interruption error is caught in case of an error.
         try {
             t.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        //writer is closed and programs ends.
         writer.close();
-
     }
 }
