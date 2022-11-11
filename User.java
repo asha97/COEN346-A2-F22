@@ -4,12 +4,11 @@ public class User {
     private String name;
     private int allocatedTime;
     public ArrayList<Process> user_processes;
-    private int number_of_ready_processes;
 
     User(String name){
+        this.user_processes = new ArrayList<Process>();
         this.name = name;
         this.allocatedTime = 0;
-        this.number_of_ready_processes = 0;
     }
 
     public String getName() {
@@ -28,13 +27,29 @@ public class User {
         this.allocatedTime = allocatedTime;
     }
 
-    public void allocateTimeToProcesses(){
-        int time = allocatedTime/ number_of_ready_processes;
+    public void allocateTimeToProcesses(int currentTime){
+        //Checks how many process are ready
+        int readyProcesses = 0;
         for(int i =0;i<user_processes.size();i++){
-            Process current = user_processes.get(i);
-            current.setAllocatedTime(time);
-            user_processes.set(i, current);
+            if(user_processes.get(i).arrivalTime <= currentTime){
+                readyProcesses+=1;
+            }
         }
+
+        //Calculate the amount of time allocated to each ready process
+        if(readyProcesses==0){
+            return;
+        }
+        int time = allocatedTime/readyProcesses;
+        for(int i =0;i<user_processes.size();i++){
+            if(user_processes.get(i).arrivalTime <= currentTime){
+                Process current = user_processes.get(i);
+                current.setAllocatedTime(time);
+                current.setReady(true);
+                user_processes.set(i,current);
+            }
+        }
+
     }
 
     public void addProcess(Process p){
@@ -49,17 +64,15 @@ public class User {
         this.user_processes = user_processes;
     }
 
-    public boolean isReady(int index){
-        this.number_of_ready_processes = 0;
-        boolean hasReadyProcesses = false;
+    public boolean isReady(int currentTime){
         for(int i =0;i<user_processes.size();i++){
-            if(user_processes.get(i).arrivalTime<=index){
-                hasReadyProcesses = true;
-                this.number_of_ready_processes += 1;
+            if(user_processes.get(i).arrivalTime <= currentTime){
+                return true;
             }
         }
-        return hasReadyProcesses;
+        return false;
     }
+
 
     public boolean isEmpty(){
         return user_processes.isEmpty();

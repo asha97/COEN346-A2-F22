@@ -3,6 +3,7 @@
 //make a function that is going to be adding processes to a list/array
 
 //make a list/array that is going to be representing the ready queue that could be scheduled
+import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.lang.Runnable;
 import java.util.LinkedList;
@@ -16,28 +17,31 @@ public class Scheduler implements Runnable{
     public int timeQuantum;
     //get current time
     public int currTime;
+    //Writer
+    BufferedWriter outputWriter;
 
-    public Scheduler(int q)
+    public Scheduler(int q,BufferedWriter writer)
     {
         users = new ArrayList<User>();
         timeQuantum = q;
         currTime = 1; //start time
+        outputWriter = writer;
+
     }
 
     private void allocateTime(){
-        //Check which user have at least one process ready to run
+        //Check how many users have at least one process ready to run
         int readyUsers = 0;
         for(int user=0;user<users.size();user++){
             if(users.get(user).isReady(currTime)){
                 readyUsers += 1;
             }
         }
-
-        int time = timeQuantum/readyUsers;
-        for(int i =0;i<users.size();i++){
+        int time = timeQuantum / readyUsers;
+        for (int i = 0; i < users.size(); i++) {
             User current = users.get(i);
             current.setAllocatedTime(time);
-            current.allocateTimeToProcesses();
+            current.allocateTimeToProcesses(currTime);
             users.set(i, current);
         }
     }
@@ -49,9 +53,10 @@ public class Scheduler implements Runnable{
             for (int user = 0; user < users.size(); user++) {
                 for (int process = 0; process < users.get(user).getUser_processes().size(); process++) {
                     //Runs the process if it is ready
-                    if (users.get(user).getUser_processes().get(process).serviceTime <= currTime) {
+                    if (users.get(user).getUser_processes().get(process).isReady()&&users.get(user).getUser_processes().get(process).allocatedTime!=0) {
                         Process runningProcess = users.get(user).getUser_processes().get(process);
                         runningProcess.setCurrentTime(currTime);
+                        runningProcess.setOutputWriter(outputWriter);
                         //Process runs for amount of allocated time or until
                         Thread t = new Thread(runningProcess);
                         t.start();
